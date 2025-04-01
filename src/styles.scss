@@ -1,1 +1,70 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Reset and base styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Custom Material and Tailwind integration */
+.mat-mdc-form-field {
+  @apply w-full;
+}
+
+.mat-mdc-card {
+  @apply rounded-lg shadow-material;
+}
+
+.mat-mdc-table {
+  @apply w-full;
+}
+
+/* Custom chip style to replace mat-chip */
+.chip {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  max-width: 100%;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Custom snackbar styles */
+.success-snackbar {
+  @apply bg-green-600 text-white;
+}
+
+.error-snackbar {
+  @apply bg-red-600 text-white;
+}
+
+/* Custom utility components using @apply */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white py-2 px-4 rounded hover:bg-primary-700 transition duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-material p-4;
+  }
+  
+  .dialog-container {
+    @apply p-4 max-w-lg mx-auto;
+  }
+  
+  .form-group {
+    @apply mb-4;
+  }
+  
+  .page-container {
+    @apply container mx-auto px-4 py-6;
+  }
+}

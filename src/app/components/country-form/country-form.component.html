@@ -1,0 +1,54 @@
+<div class="country-form-container">
+    <h2 mat-dialog-title>{{ isNewCountry ? 'Add' : 'Edit' }} Country</h2>
+  
+    <form [formGroup]="countryForm" (ngSubmit)="onSubmit()">
+      <mat-dialog-content>
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+  
+        <!-- Hidden ID field -->
+        <input type="hidden" formControlName="id">
+  
+        <!-- Country Code -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Country Code</mat-label>
+          <input matInput formControlName="countryCode" placeholder="e.g. US" maxlength="2" autocapitalize="characters">
+          <mat-hint>2-letter ISO country code (e.g., US, UK, DE)</mat-hint>
+          <mat-error *ngIf="countryForm.get('countryCode')?.touched">
+            {{ getErrorMessage('countryCode') }}
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Country Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Country Name</mat-label>
+          <input matInput formControlName="countryName" placeholder="e.g. United States" maxlength="100">
+          <mat-hint>Full country name</mat-hint>
+          <mat-error *ngIf="countryForm.get('countryName')?.touched">
+            {{ getErrorMessage('countryName') }}
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Is Active -->
+        <div class="active-status">
+          <mat-slide-toggle formControlName="isActive" color="primary">
+            Active
+          </mat-slide-toggle>
+          <span class="status-hint">
+            {{ countryForm.get('isActive')?.value ? 'Country will be available in the system' : 'Country will not be available in the system' }}
+          </span>
+        </div>
+      </mat-dialog-content>
+  
+      <mat-dialog-actions align="end">
+        <button mat-button type="button" [disabled]="isSubmitting" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+          <span *ngIf="!isSubmitting">{{ isNewCountry ? 'Add' : 'Save' }}</span>
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>
