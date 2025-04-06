@@ -1,46 +1,47 @@
 <div class="page-container">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-      <h1 class="text-2xl font-medium text-gray-800 mb-4 md:mb-0">Country Settings</h1>
-      <button mat-raised-button color="primary" (click)="openAddDialog()" class="flex items-center">
-        <mat-icon class="mr-1">add</mat-icon> Add Country
-      </button>
-    </div>
-  
-    <!-- Loading spinner -->
-    <div *ngIf="isLoading" class="card flex items-center justify-center py-12">
-      <mat-spinner diameter="40" class="mr-3"></mat-spinner>
-      <span class="text-gray-600">Loading countries...</span>
-    </div>
-  
-    <!-- Error message -->
-    <div *ngIf="error" class="bg-red-50 text-red-700 rounded-lg p-4 flex items-center mb-6">
-      <mat-icon color="warn" class="mr-2">error</mat-icon>
-      <span>{{ error }}</span>
-      <button mat-button color="warn" (click)="loadCountries()" class="ml-4">Try Again</button>
-    </div>
-  
-    <!-- Countries table -->
-    <div *ngIf="!isLoading && !error" class="overflow-x-auto">
-      <table mat-table [dataSource]="countries" class="w-full shadow-sm">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+    <h1 class="text-2xl font-medium text-gray-800 mb-4 md:mb-0">Country Settings</h1>
+    <button mat-raised-button color="primary" (click)="openAddDialog()" class="flex items-center">
+      <mat-icon class="mr-1">add</mat-icon> Add Country
+    </button>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="isLoading" class="bg-white rounded-lg shadow-sm flex items-center justify-center py-12">
+    <mat-spinner diameter="40" class="mr-3"></mat-spinner>
+    <span class="text-gray-600">Loading countries...</span>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="bg-red-50 text-red-700 rounded-lg p-4 flex items-center mb-6">
+    <mat-icon color="warn" class="mr-2">error</mat-icon>
+    <span>{{ error }}</span>
+    <button mat-button color="warn" (click)="loadCountries()" class="ml-4">Try Again</button>
+  </div>
+
+  <!-- Countries table -->
+  <div *ngIf="!isLoading && !error" class="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table mat-table [dataSource]="countries" class="w-full">
         <!-- ID Column -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef class="bg-gray-50">ID</th>
           <td mat-cell *matCellDef="let country">{{ country.id }}</td>
         </ng-container>
-  
+
         <!-- Country Code Column -->
         <ng-container matColumnDef="countryCode">
           <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Code</th>
           <td mat-cell *matCellDef="let country" class="font-mono">{{ country.countryCode }}</td>
         </ng-container>
-  
+
         <!-- Country Name Column -->
         <ng-container matColumnDef="countryName">
           <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Name</th>
           <td mat-cell *matCellDef="let country">{{ country.countryName }}</td>
         </ng-container>
-  
+
         <!-- Status Column -->
         <ng-container matColumnDef="isActive">
           <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Status</th>
@@ -50,7 +51,7 @@
             </div>
           </td>
         </ng-container>
-  
+
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-right">Actions</th>
@@ -70,16 +71,17 @@
             </button>
           </td>
         </ng-container>
-  
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
             class="hover:bg-gray-50 transition-colors duration-150"></tr>
       </table>
-  
-      <!-- No data message -->
-      <div *ngIf="countries.length === 0" class="card flex flex-col items-center justify-center py-12 text-gray-500">
-        <mat-icon class="text-4xl mb-2">info</mat-icon>
-        <span>No countries found. Click 'Add Country' to create one.</span>
-      </div>
+    </div>
+
+    <!-- No data message -->
+    <div *ngIf="countries.length === 0" class="flex flex-col items-center justify-center py-12 text-gray-500">
+      <mat-icon class="text-4xl mb-2">info</mat-icon>
+      <span>No countries found. Click 'Add Country' to create one.</span>
     </div>
   </div>
+</div>
