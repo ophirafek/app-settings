@@ -3,5 +3,6 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:5090'  // URL of the .NET Core API
+    apiUrl: 'http://localhost:5090',  // URL of the .NET Core API,
+    userApiUrl:'http://localhost:5232'
   };

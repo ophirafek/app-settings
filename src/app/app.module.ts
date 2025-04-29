@@ -28,9 +28,9 @@ import { CountryListComponent } from './components/country-list/country-list.com
 
 @NgModule({
   declarations: [
-    AppComponent,
   ],
   imports: [
+    AppComponent,
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
@@ -53,6 +53,6 @@ import { CountryListComponent } from './components/country-list/country-list.com
     MatBadgeModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  // Removed bootstrap array as AppComponent is a standalone component
 })
 export class AppModule { }

@@ -38,8 +38,11 @@ export class GeneralCodeFormComponent implements OnInit {
   isNewGeneralCode: boolean;
   
   // For dropdowns
-  codeTypes = Object.entries(CodeType).filter(([key]) => isNaN(Number(key))); // Filter out numeric keys
+  codeTypes: GeneralCode[] = [];
   languageCodes = Object.entries(LanguageCode).filter(([key]) => isNaN(Number(key)));
+  
+  // Loading states
+  isLoadingCodeTypes = false;
   
   // For component access to enums
   CodeType = CodeType;
@@ -83,7 +86,71 @@ export class GeneralCodeFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Any additional initialization logic
+    // Load code types from general codes with code type 0
+    this.loadCodeTypes();
+  }
+
+  /**
+   * Load code types from general codes
+   */
+  loadCodeTypes(): void {
+    this.isLoadingCodeTypes = true;
+    
+    // Get code types from general codes type 0
+    this.generalCodeService.getGeneralCodesByType(0)
+      .subscribe({
+        next: (codes) => {
+          // Add code type 0 with value 'Code Type' if it doesn't exist
+          const codeTypeZeroExists = codes.some(code => code.codeNumber === 0);
+          
+          if (!codeTypeZeroExists) {
+            // Add code type 0 to the beginning of the array
+            codes.unshift({
+              id: 0, // This will be ignored when saving a new code
+              codeType: 0,
+              codeNumber: 0,
+              codeShortDescription: 'Code Type',
+              codeLongDescription: 'Used for defining code types',
+              languageCode: 1,
+              isActive: true
+            });
+          }
+          
+          this.codeTypes = codes;
+          this.isLoadingCodeTypes = false;
+        },
+        error: (error) => {
+          console.error('Error loading code types:', error);
+          this.isLoadingCodeTypes = false;
+          
+          // Initialize with code type 0
+          this.codeTypes = [{
+            id: 0,
+            codeType: 0,
+            codeNumber: 0,
+            codeShortDescription: 'Code Type',
+            codeLongDescription: 'Used for defining code types',
+            languageCode: 1,
+            isActive: true
+          }];
+          
+          // Also populate code types from the enum as fallback
+          const enumCodeTypes = Object.entries(CodeType)
+            .filter(([key]) => isNaN(Number(key)))
+            .map(([key, value], index) => ({
+              id: index + 1,
+              codeType: 0,
+              codeNumber: value as number,
+              codeShortDescription: key,
+              codeLongDescription: key,
+              languageCode: 1,
+              isActive: true
+            }));
+            
+          // Add enum code types to the array
+          this.codeTypes = [...this.codeTypes, ...enumCodeTypes];
+        }
+      });
   }
 
   /**

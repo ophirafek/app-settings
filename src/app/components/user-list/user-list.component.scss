@@ -1,0 +1,121 @@
+.user-list-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+  
+      h1 {
+        margin: 0;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+  
+    .loading-container, 
+    .error-message, 
+    .no-data {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      margin-top: 20px;
+  
+      mat-spinner, mat-icon {
+        margin-right: 12px;
+      }
+    }
+  
+    .error-message {
+      color: #f44336;
+      
+      button {
+        margin-left: 12px;
+      }
+    }
+  
+    .table-container {
+      overflow-x: auto;
+      
+      table {
+        width: 100%;
+        
+        .mat-column-id {
+          width: 10%;
+          max-width: 80px;
+        }
+        
+        .mat-column-username {
+          width: 20%;
+        }
+        
+        .mat-column-idNumber {
+          width: 15%;
+        }
+        
+        .mat-column-status {
+          width: 20%;
+        }
+        
+        .mat-column-mobileNumber {
+          width: 15%;
+        }
+        
+        .mat-column-actions {
+          width: 20%;
+          text-align: right;
+        }
+  
+        tr.mat-row:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+  
+    .no-data {
+      color: #607d8b;
+      font-style: italic;
+    }
+  }
+  
+  /* Badge styling for login attempts */
+  .login-attempts {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    margin-left: 5px;
+  }
+  
+  /* For mobile devices */
+  @media (max-width: 768px) {
+    .user-list-container {
+      padding: 10px;
+  
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        
+        h1 {
+          margin-bottom: 10px;
+        }
+      }
+      
+      .table-container {
+        table {
+          .mat-column-id,
+          .mat-column-username,
+          .mat-column-idNumber {
+            max-width: none;
+          }
+        }
+      }
+    }
+  }

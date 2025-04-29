@@ -17,8 +17,9 @@
           <mat-label>Code Type</mat-label>
           <mat-select [(ngModel)]="selectedCodeType">
             <mat-option [value]="null">All Types</mat-option>
-            <mat-option *ngFor="let codeType of codeTypes" [value]="getCodeTypeValue(codeType[0])">
-              {{ codeType[0] }}
+            <mat-option *ngIf="isLoadingCodeTypes" disabled>Loading code types...</mat-option>
+            <mat-option *ngFor="let codeType of codeTypes" [value]="codeType.codeNumber">
+              {{ codeType.codeShortDescription }}
             </mat-option>
           </mat-select>
         </mat-form-field>

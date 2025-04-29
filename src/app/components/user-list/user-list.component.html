@@ -1,0 +1,126 @@
+<div class="page-container">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+      <h1 class="text-2xl font-medium text-gray-800 mb-4 md:mb-0">User Management</h1>
+      <button mat-raised-button color="primary" (click)="openAddDialog()" class="flex items-center">
+        <mat-icon class="mr-1">add</mat-icon> Add User
+      </button>
+    </div>
+  
+    <!-- Loading spinner -->
+    <div *ngIf="isLoading" class="bg-white rounded-lg shadow-sm flex items-center justify-center py-12">
+      <mat-spinner diameter="40" class="mr-3"></mat-spinner>
+      <span class="text-gray-600">Loading users...</span>
+    </div>
+  
+    <!-- Error message -->
+    <div *ngIf="error" class="bg-red-50 text-red-700 rounded-lg p-4 flex items-center mb-6">
+      <mat-icon color="warn" class="mr-2">error</mat-icon>
+      <span>{{ error }}</span>
+      <button mat-button color="warn" (click)="loadUsers()" class="ml-4">Try Again</button>
+    </div>
+  
+    <!-- Users table -->
+    <div *ngIf="!isLoading && !error" class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table mat-table [dataSource]="users" class="w-full">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50">ID</th>
+            <td mat-cell *matCellDef="let user">{{ user.id }}</td>
+          </ng-container>
+  
+          <!-- Username Column -->
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Username</th>
+            <td mat-cell *matCellDef="let user" class="font-medium">
+              {{ user.username }}
+              <div *ngIf="user.loginAttempts > 0" 
+                   class="text-xs text-red-600 font-normal"
+                   [matTooltip]="'Failed login attempts: ' + user.loginAttempts">
+                {{ user.loginAttempts }} failed login attempt(s)
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- ID Number Column -->
+          <ng-container matColumnDef="idNumber">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50">ID Number</th>
+            <td mat-cell *matCellDef="let user" class="font-mono">{{ user.idNumber || '-' }}</td>
+          </ng-container>
+  
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Status</th>
+            <td mat-cell *matCellDef="let user">
+              <div class="chip" [ngClass]="getUserStatusClass(user)">
+                {{ getUserStatus(user) }}
+              </div>
+              <div *ngIf="user.passwordExpiryDate" class="text-xs mt-1 text-gray-500">
+                Password expires: {{ formatDate(user.passwordExpiryDate) }}
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- Mobile Number Column -->
+          <ng-container matColumnDef="mobileNumber">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50">Mobile</th>
+            <td mat-cell *matCellDef="let user">{{ user.mobileNumber || '-' }}</td>
+          </ng-container>
+  
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="bg-gray-50 text-right">Actions</th>
+            <td mat-cell *matCellDef="let user" class="text-right">
+              <button mat-icon-button color="primary" (click)="openEditDialog(user)" matTooltip="Edit" 
+                      class="text-blue-600 hover:text-blue-800">
+                <mat-icon>edit</mat-icon>
+              </button>
+              
+              <button mat-icon-button [matMenuTriggerFor]="menu" class="text-gray-600 hover:text-gray-800">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="toggleBlockStatus(user)">
+                  <mat-icon [color]="user.isBlocked ? 'primary' : 'warn'">
+                    {{ user.isBlocked ? 'lock_open' : 'lock' }}
+                  </mat-icon>
+                  <span>{{ user.isBlocked ? 'Unblock' : 'Block' }} User</span>
+                </button>
+                
+                <button mat-menu-item (click)="toggleActiveStatus(user)">
+                  <mat-icon [color]="user.activeFlag ? 'warn' : 'primary'">
+                    {{ user.activeFlag ? 'toggle_off' : 'toggle_on' }}
+                  </mat-icon>
+                  <span>{{ user.activeFlag ? 'Deactivate' : 'Activate' }} User</span>
+                </button>
+                
+                <button mat-menu-item [disabled]="user.loginAttempts === 0" (click)="resetLoginAttempts(user)">
+                  <mat-icon color="accent">refresh</mat-icon>
+                  <span>Reset Login Attempts</span>
+                </button>
+                
+                <mat-divider></mat-divider>
+                
+                <button mat-menu-item (click)="deleteUser(user)" class="text-red-600">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span>Delete User</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
+              class="hover:bg-gray-50 transition-colors duration-150"></tr>
+        </table>
+      </div>
+  
+      <!-- No data message -->
+      <div *ngIf="users.length === 0" class="flex flex-col items-center justify-center py-12 text-gray-500">
+        <mat-icon class="text-4xl mb-2">info</mat-icon>
+        <span>No users found. Click 'Add User' to create one.</span>
+      </div>
+    </div>
+  </div>
