@@ -39,10 +39,11 @@ export class GeneralCodeFormComponent implements OnInit {
   
   // For dropdowns
   codeTypes: GeneralCode[] = [];
-  languageCodes = Object.entries(LanguageCode).filter(([key]) => isNaN(Number(key)));
+  languageCodes: GeneralCode[] = [];
   
   // Loading states
   isLoadingCodeTypes = false;
+  isLoadingLanguages = false;
   
   // For component access to enums
   CodeType = CodeType;
@@ -86,85 +87,107 @@ export class GeneralCodeFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Load code types from general codes with code type 0
-    this.loadCodeTypes();
+    // Load code types and language codes
+    Promise.all([
+      this.loadCodeTypes(),
+      this.loadLanguageCodes()
+    ]);
   }
 
   /**
-   * Load code types from general codes
+   * Load code types from general codes with type 0
    */
-  loadCodeTypes(): void {
+  loadCodeTypes(): Promise<void> {
     this.isLoadingCodeTypes = true;
     
-    // Get code types from general codes type 0
-    this.generalCodeService.getGeneralCodesByType(0)
-      .subscribe({
-        next: (codes) => {
-          // Add code type 0 with value 'Code Type' if it doesn't exist
-          const codeTypeZeroExists = codes.some(code => code.codeNumber === 0);
-          
-          if (!codeTypeZeroExists) {
-            // Add code type 0 to the beginning of the array
-            codes.unshift({
-              id: 0, // This will be ignored when saving a new code
+    return new Promise<void>((resolve) => {
+      this.generalCodeService.getGeneralCodesByType(0)
+        .subscribe({
+          next: (codes) => {
+            // Check if code type 0 exists in the result
+            const codeTypeZeroExists = codes.some(code => code.codeNumber === 0);
+            
+            if (!codeTypeZeroExists) {
+              // Add code type 0 to the beginning of the array
+              codes.unshift({
+                id: 0,
+                codeType: 0,
+                codeNumber: 0,
+                codeShortDescription: 'Code Type',
+                codeLongDescription: 'Used for defining code types',
+                languageCode: 1,
+                isActive: true
+              });
+            }
+            
+            this.codeTypes = codes;
+            this.isLoadingCodeTypes = false;
+            resolve();
+          },
+          error: (error) => {
+            console.error('Error loading code types:', error);
+            this.isLoadingCodeTypes = false;
+            
+            // Initialize with code type 0
+            this.codeTypes = [{
+              id: 0,
               codeType: 0,
               codeNumber: 0,
               codeShortDescription: 'Code Type',
               codeLongDescription: 'Used for defining code types',
               languageCode: 1,
               isActive: true
-            });
-          }
-          
-          this.codeTypes = codes;
-          this.isLoadingCodeTypes = false;
-        },
-        error: (error) => {
-          console.error('Error loading code types:', error);
-          this.isLoadingCodeTypes = false;
-          
-          // Initialize with code type 0
-          this.codeTypes = [{
-            id: 0,
-            codeType: 0,
-            codeNumber: 0,
-            codeShortDescription: 'Code Type',
-            codeLongDescription: 'Used for defining code types',
-            languageCode: 1,
-            isActive: true
-          }];
-          
-          // Also populate code types from the enum as fallback
-          const enumCodeTypes = Object.entries(CodeType)
-            .filter(([key]) => isNaN(Number(key)))
-            .map(([key, value], index) => ({
-              id: index + 1,
-              codeType: 0,
-              codeNumber: value as number,
-              codeShortDescription: key,
-              codeLongDescription: key,
-              languageCode: 1,
-              isActive: true
-            }));
+            }];
             
-          // Add enum code types to the array
-          this.codeTypes = [...this.codeTypes, ...enumCodeTypes];
-        }
-      });
+            // Also populate code types from the enum as fallback
+            const enumCodeTypes = Object.entries(CodeType)
+              .filter(([key]) => isNaN(Number(key)))
+              .map(([key, value], index) => ({
+                id: index + 1,
+                codeType: 0,
+                codeNumber: value as number,
+                codeShortDescription: key,
+                codeLongDescription: key,
+                languageCode: 1,
+                isActive: true
+              }));
+              
+            // Add enum code types to the array
+            this.codeTypes = [...this.codeTypes, ...enumCodeTypes];
+            resolve();
+          }
+        });
+    });
   }
 
   /**
-   * Helper method to safely get CodeType enum value
+   * Load language codes from general codes with type 61
    */
-  getCodeTypeValue(key: string): number {
-    return CodeType[key as keyof typeof CodeType];
-  }
-
-  /**
-   * Helper method to safely get LanguageCode enum value
-   */
-  getLanguageCodeValue(key: string): number {
-    return LanguageCode[key as keyof typeof LanguageCode];
+  loadLanguageCodes(): Promise<void> {
+    this.isLoadingLanguages = true;
+    
+    return new Promise<void>((resolve) => {
+      this.generalCodeService.getGeneralCodesByType(61)
+        .subscribe({
+          next: (codes) => {
+            this.languageCodes = codes;
+            this.isLoadingLanguages = false;
+            resolve();
+          },
+          error: (error) => {
+            console.error('Error loading language codes:', error);
+            this.isLoadingLanguages = false;
+            
+            // Fallback to some default languages if the API call fails
+            this.languageCodes = [
+              { id: 1, codeType: 61, codeNumber: 1, codeShortDescription: 'English', codeLongDescription: 'English Language', languageCode: 1, isActive: true },
+              { id: 2, codeType: 61, codeNumber: 2, codeShortDescription: 'Spanish', codeLongDescription: 'Spanish Language', languageCode: 1, isActive: true },
+              { id: 3, codeType: 61, codeNumber: 3, codeShortDescription: 'French', codeLongDescription: 'French Language', languageCode: 1, isActive: true }
+            ];
+            resolve();
+          }
+        });
+    });
   }
 
   /**

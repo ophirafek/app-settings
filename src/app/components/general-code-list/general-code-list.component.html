@@ -31,8 +31,9 @@
           <mat-label>Language</mat-label>
           <mat-select [(ngModel)]="selectedLanguageCode">
             <mat-option [value]="null">All Languages</mat-option>
-            <mat-option *ngFor="let language of languageCodes" [value]="getLanguageCodeValue(language[0])">
-              {{ language[0] }}
+            <mat-option *ngIf="isLoadingLanguages" disabled>Loading languages...</mat-option>
+            <mat-option *ngFor="let language of languageCodes" [value]="language.codeNumber">
+              {{ language.codeShortDescription }}
             </mat-option>
           </mat-select>
         </mat-form-field>

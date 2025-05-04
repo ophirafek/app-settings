@@ -1,0 +1,135 @@
+<div class="employee-form-container">
+    <h2 mat-dialog-title>{{ isNewEmployee ? 'Add' : 'Edit' }} Employee</h2>
+  
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+      <mat-dialog-content>
+        <!-- Error Message -->
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+  
+        <!-- User ID Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>User</mat-label>
+          <mat-select formControlName="userId" [disabled]="!isNewEmployee">
+            <mat-option *ngIf="isLoadingUsers" disabled>Loading users...</mat-option>
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.username }} ({{ user.idNumber || 'No ID' }})
+            </mat-option>
+          </mat-select>
+          <mat-hint>Select the user account for this employee</mat-hint>
+          <mat-error *ngIf="employeeForm.get('userId')?.touched">
+            {{ getErrorMessage('userId') }}
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Employee ID -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Employee ID</mat-label>
+          <input matInput formControlName="employeeId" placeholder="Enter employee ID" maxlength="20">
+          <mat-hint>Required, max 20 characters</mat-hint>
+          <mat-error *ngIf="employeeForm.get('employeeId')?.touched">
+            {{ getErrorMessage('employeeId') }}
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Employee Name -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Employee Name</mat-label>
+          <input matInput formControlName="employeeName" placeholder="Enter employee name">
+          <mat-hint>Required</mat-hint>
+          <mat-error *ngIf="employeeForm.get('employeeName')?.touched">
+            {{ getErrorMessage('employeeName') }}
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Employee Name (English) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Employee Name (English)</mat-label>
+          <input matInput formControlName="employeeNameEnglish" placeholder="Enter employee name in English">
+          <mat-hint>Optional</mat-hint>
+        </mat-form-field>
+  
+        <!-- Two columns layout for contact information -->
+        <div class="form-row">
+          <!-- Phone Number -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phoneNumber" placeholder="Enter phone number">
+            <mat-hint>Optional</mat-hint>
+          </mat-form-field>
+  
+          <!-- Email -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Enter email address">
+            <mat-hint>Optional</mat-hint>
+            <mat-error *ngIf="employeeForm.get('email')?.touched">
+              {{ getErrorMessage('email') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <!-- Two columns layout for effective dates -->
+        <div class="form-row">
+          <!-- Opening Effective Date -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Opening Effective Date</mat-label>
+            <input matInput [matDatepicker]="openingEffectivePicker" formControlName="openingEffectiveDate">
+            <mat-datepicker-toggle matSuffix [for]="openingEffectivePicker"></mat-datepicker-toggle>
+            <mat-datepicker #openingEffectivePicker></mat-datepicker>
+            <mat-hint>When employee becomes effective</mat-hint>
+          </mat-form-field>
+  
+          <!-- Closing Effective Date -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Closing Effective Date</mat-label>
+            <input matInput [matDatepicker]="closingEffectivePicker" formControlName="closingEffectiveDate">
+            <mat-datepicker-toggle matSuffix [for]="closingEffectivePicker"></mat-datepicker-toggle>
+            <mat-datepicker #closingEffectivePicker></mat-datepicker>
+            <mat-hint>When employee effectiveness ends</mat-hint>
+          </mat-form-field>
+        </div>
+  
+        <!-- Two columns layout for registration dates -->
+        <div class="form-row">
+          <!-- Opening Registration Date -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Opening Registration Date</mat-label>
+            <input matInput [matDatepicker]="openingRegistrationPicker" formControlName="openingRegistrationDate">
+            <mat-datepicker-toggle matSuffix [for]="openingRegistrationPicker"></mat-datepicker-toggle>
+            <mat-datepicker #openingRegistrationPicker></mat-datepicker>
+            <mat-hint>When employee was registered</mat-hint>
+          </mat-form-field>
+  
+          <!-- Closing Registration Date -->
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Closing Registration Date</mat-label>
+            <input matInput [matDatepicker]="closingRegistrationPicker" formControlName="closingRegistrationDate">
+            <mat-datepicker-toggle matSuffix [for]="closingRegistrationPicker"></mat-datepicker-toggle>
+            <mat-datepicker #closingRegistrationPicker></mat-datepicker>
+            <mat-hint>When employee registration ends</mat-hint>
+          </mat-form-field>
+        </div>
+  
+        <!-- Active Flag -->
+        <div class="active-status">
+          <mat-slide-toggle formControlName="activeFlag" color="primary">
+            Active
+          </mat-slide-toggle>
+          <span class="status-hint">
+            {{ employeeForm.get('activeFlag')?.value ? 'Employee will be available in the system' : 'Employee will not be available in the system' }}
+          </span>
+        </div>
+      </mat-dialog-content>
+  
+      <mat-dialog-actions align="end">
+        <button mat-button type="button" [disabled]="isSubmitting" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="20" class="button-spinner"></mat-spinner>
+          <span *ngIf="!isSubmitting">{{ isNewEmployee ? 'Add' : 'Save' }}</span>
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>

@@ -62,8 +62,9 @@
       <mat-form-field appearance="outline" class="w-full mb-4">
         <mat-label>Language</mat-label>
         <mat-select formControlName="languageCode">
-          <mat-option *ngFor="let language of languageCodes" [value]="getLanguageCodeValue(language[0])">
-            {{ language[0] }}
+          <mat-option *ngIf="isLoadingLanguages" disabled>Loading languages...</mat-option>
+          <mat-option *ngFor="let language of languageCodes" [value]="language.codeNumber">
+            {{ language.codeShortDescription }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="generalCodeForm.get('languageCode')?.touched">
