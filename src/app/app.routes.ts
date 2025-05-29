@@ -3,6 +3,7 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { GeneralCodeListComponent } from './components/general-code-list/general-code-list.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
+import { CustomFieldsAdminComponent } from './components/custom-fields-admin/custom-fields-admin.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'countries', pathMatch: 'full' },
@@ -10,5 +11,6 @@ export const routes: Routes = [
   { path: 'general-codes', component: GeneralCodeListComponent },
   { path: 'users', component: UserListComponent },
   { path: 'employees', component: EmployeeListComponent },
+  { path: 'custom-fields', component: CustomFieldsAdminComponent },
   { path: '**', redirectTo: 'countries' }
 ];

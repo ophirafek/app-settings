@@ -3,16 +3,8 @@
     <!-- Header -->
     <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
       <div class="flex items-center">
-        <button 
-          mat-icon-button
-          color="primary"
-          routerLink="/settings"
-          class="mr-2"
-        >
-          <mat-icon>arrow_back</mat-icon>
-        </button>
         <h1 class="text-xl font-bold text-gray-800">
-          {{ 'SETTINGS.CUSTOM_FIELDS_ADMIN' | transloco }}
+          Custom Fields Administration
         </h1>
       </div>
       
@@ -24,7 +16,7 @@
           class="flex items-center"
         >
           <mat-icon class="mr-1">add</mat-icon>
-          {{ 'SETTINGS.ADD_CUSTOM_FIELD' | transloco }}
+          Add Custom Field
         </button>
       </div>
     </header>
@@ -34,12 +26,12 @@
       <!-- Entity Type Selection -->
       <div class="bg-white rounded-lg shadow-md p-4 mb-6">
         <mat-form-field appearance="outline" class="w-full sm:w-64">
-          <mat-label>{{ 'SETTINGS.ENTITY_TYPE' | transloco }}</mat-label>
+          <mat-label>Entity Type</mat-label>
           <mat-select [(ngModel)]="selectedEntityType" (selectionChange)="loadCustomFields()">
-            <mat-option value="lead">{{ 'SETTINGS.ENTITY_LEAD' | transloco }}</mat-option>
-            <mat-option value="company">{{ 'SETTINGS.ENTITY_COMPANY' | transloco }}</mat-option>
-            <mat-option value="contact">{{ 'SETTINGS.ENTITY_CONTACT' | transloco }}</mat-option>
-            <mat-option value="opportunity">{{ 'SETTINGS.ENTITY_OPPORTUNITY' | transloco }}</mat-option>
+            <mat-option value="lead">Lead</mat-option>
+            <mat-option value="company">Company</mat-option>
+            <mat-option value="contact">Contact</mat-option>
+            <mat-option value="opportunity">Opportunity</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -47,7 +39,7 @@
       <!-- Loading State -->
       <div *ngIf="loading" class="flex justify-center items-center py-12">
         <mat-spinner [diameter]="36"></mat-spinner>
-        <p class="ml-4 text-gray-700">{{ 'COMMON.LOADING' | transloco }}</p>
+        <p class="ml-4 text-gray-700">Loading...</p>
       </div>
       
       <!-- Empty State -->
@@ -55,8 +47,8 @@
         <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <mat-icon class="text-gray-400 text-3xl">view_list</mat-icon>
         </div>
-        <p class="text-gray-700">{{ 'SETTINGS.NO_CUSTOM_FIELDS' | transloco }}</p>
-        <p class="text-sm text-gray-500 mt-1">{{ 'SETTINGS.ADD_CUSTOM_FIELDS_MESSAGE' | transloco }}</p>
+        <p class="text-gray-700">No custom fields found</p>
+        <p class="text-sm text-gray-500 mt-1">Add custom fields to extend your entities</p>
         
         <div class="mt-4">
           <button 
@@ -65,17 +57,17 @@
             (click)="openAddFieldDialog()"
           >
             <mat-icon class="mr-1">add</mat-icon>
-            {{ 'SETTINGS.ADD_CUSTOM_FIELD' | transloco }}
+            Add Custom Field
           </button>
         </div>
       </div>
       
-      <!-- Custom Fields List with drag-and-drop reordering -->
+      <!-- Custom Fields List -->
       <div *ngIf="!loading && customFields && customFields.length > 0" class="bg-white rounded-lg shadow-md overflow-hidden">
         <table mat-table [dataSource]="customFields" class="w-full">
           <!-- Active Column -->
           <ng-container matColumnDef="active">
-            <th mat-header-cell *matHeaderCellDef class="w-16">{{ 'SETTINGS.ACTIVE' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef class="w-16">Active</th>
             <td mat-cell *matCellDef="let field">
               <mat-slide-toggle
                 [checked]="field.isActive"
@@ -87,7 +79,7 @@
           
           <!-- Name Column -->
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>{{ 'SETTINGS.FIELD_NAME' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef>Field Name</th>
             <td mat-cell *matCellDef="let field">
               <div class="font-medium">{{ field.displayName }}</div>
               <div class="text-xs text-gray-500">{{ field.name }}</div>
@@ -96,7 +88,7 @@
           
           <!-- Type Column -->
           <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>{{ 'SETTINGS.FIELD_TYPE' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef>Field Type</th>
             <td mat-cell *matCellDef="let field">
               <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" 
                   [ngClass]="getFieldTypeClass(field.fieldType)">
@@ -107,13 +99,13 @@
           
           <!-- Group Column -->
           <ng-container matColumnDef="group">
-            <th mat-header-cell *matHeaderCellDef>{{ 'SETTINGS.GROUP' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef>Group</th>
             <td mat-cell *matCellDef="let field">{{ field.groupName || 'General' }}</td>
           </ng-container>
           
           <!-- Required Column -->
           <ng-container matColumnDef="required">
-            <th mat-header-cell *matHeaderCellDef class="w-24">{{ 'SETTINGS.REQUIRED' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef class="w-24">Required</th>
             <td mat-cell *matCellDef="let field">
               <mat-icon *ngIf="field.isRequired" class="text-green-600">check_circle</mat-icon>
               <mat-icon *ngIf="!field.isRequired" class="text-gray-300">cancel</mat-icon>
@@ -122,7 +114,7 @@
           
           <!-- Actions Column -->
           <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef class="w-24 text-right">{{ 'SETTINGS.ACTIONS' | transloco }}</th>
+            <th mat-header-cell *matHeaderCellDef class="w-24 text-right">Actions</th>
             <td mat-cell *matCellDef="let field" class="text-right">
               <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
                 <mat-icon>more_vert</mat-icon>
@@ -130,19 +122,19 @@
               <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="editField(field)">
                   <mat-icon>edit</mat-icon>
-                  <span>{{ 'BUTTONS.EDIT' | transloco }}</span>
+                  <span>Edit</span>
                 </button>
                 <button mat-menu-item (click)="moveUp(field)" [disabled]="isFirstField(field)">
                   <mat-icon>arrow_upward</mat-icon>
-                  <span>{{ 'BUTTONS.MOVE_UP' | transloco }}</span>
+                  <span>Move Up</span>
                 </button>
                 <button mat-menu-item (click)="moveDown(field)" [disabled]="isLastField(field)">
                   <mat-icon>arrow_downward</mat-icon>
-                  <span>{{ 'BUTTONS.MOVE_DOWN' | transloco }}</span>
+                  <span>Move Down</span>
                 </button>
                 <button mat-menu-item (click)="confirmDelete(field)" class="text-red-600">
                   <mat-icon class="text-red-600">delete</mat-icon>
-                  <span>{{ 'BUTTONS.DELETE' | transloco }}</span>
+                  <span>Delete</span>
                 </button>
               </mat-menu>
             </td>
@@ -158,7 +150,7 @@
   <!-- Custom Field Add/Edit Dialog Template -->
   <ng-template #fieldDialog>
     <h2 mat-dialog-title>
-      {{ isEditMode ? ('SETTINGS.EDIT_CUSTOM_FIELD' | transloco) : ('SETTINGS.ADD_CUSTOM_FIELD' | transloco) }}
+      {{ isEditMode ? 'Edit Custom Field' : 'Add Custom Field' }}
     </h2>
     
     <form [formGroup]="fieldForm" (ngSubmit)="saveField()">
@@ -167,19 +159,19 @@
           <!-- Field Name (internal) -->
           <div class="sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.FIELD_NAME' | transloco }} <span class="text-red-500">*</span></mat-label>
+              <mat-label>Field Name <span class="text-red-500">*</span></mat-label>
               <input 
                 matInput 
                 formControlName="name" 
                 required
-                [placeholder]="'SETTINGS.FIELD_NAME_PLACEHOLDER' | transloco"
+                placeholder="field_name"
               >
-              <mat-hint>{{ 'SETTINGS.FIELD_NAME_HINT' | transloco }}</mat-hint>
+              <mat-hint>Internal field name (letters, numbers, underscores only)</mat-hint>
               <mat-error *ngIf="fieldForm.get('name')?.hasError('required')">
-                {{ 'VALIDATION.REQUIRED' | transloco }}
+                Field name is required
               </mat-error>
               <mat-error *ngIf="fieldForm.get('name')?.hasError('pattern')">
-                {{ 'VALIDATION.INVALID_NAME_FORMAT' | transloco }}
+                Only letters, numbers, and underscores allowed
               </mat-error>
             </mat-form-field>
           </div>
@@ -187,15 +179,15 @@
           <!-- Display Name -->
           <div class="sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DISPLAY_NAME' | transloco }} <span class="text-red-500">*</span></mat-label>
+              <mat-label>Display Name <span class="text-red-500">*</span></mat-label>
               <input 
                 matInput 
                 formControlName="displayName" 
                 required
-                [placeholder]="'SETTINGS.DISPLAY_NAME_PLACEHOLDER' | transloco"
+                placeholder="Field Display Name"
               >
               <mat-error *ngIf="fieldForm.get('displayName')?.hasError('required')">
-                {{ 'VALIDATION.REQUIRED' | transloco }}
+                Display name is required
               </mat-error>
             </mat-form-field>
           </div>
@@ -203,19 +195,14 @@
           <!-- Field Type -->
           <div>
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.FIELD_TYPE' | transloco }} <span class="text-red-500">*</span></mat-label>
+              <mat-label>Field Type <span class="text-red-500">*</span></mat-label>
               <mat-select formControlName="fieldType" required>
-                <mat-option value="text">{{ 'SETTINGS.FIELD_TYPE_TEXT' | transloco }}</mat-option>
-                <mat-option value="textarea">{{ 'SETTINGS.FIELD_TYPE_TEXTAREA' | transloco }}</mat-option>
-                <mat-option value="number">{{ 'SETTINGS.FIELD_TYPE_NUMBER' | transloco }}</mat-option>
-                <mat-option value="date">{{ 'SETTINGS.FIELD_TYPE_DATE' | transloco }}</mat-option>
-                <mat-option value="boolean">{{ 'SETTINGS.FIELD_TYPE_BOOLEAN' | transloco }}</mat-option>
-                <mat-option value="select">{{ 'SETTINGS.FIELD_TYPE_SELECT' | transloco }}</mat-option>
-                <mat-option value="multi-select">{{ 'SETTINGS.FIELD_TYPE_MULTI_SELECT' | transloco }}</mat-option>
-                <mat-option value="general-code">{{ 'SETTINGS.FIELD_TYPE_GENERAL_CODE' | transloco }}</mat-option>
+                <mat-option *ngFor="let type of fieldTypes" [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
               </mat-select>
               <mat-error *ngIf="fieldForm.get('fieldType')?.hasError('required')">
-                {{ 'VALIDATION.REQUIRED' | transloco }}
+                Field type is required
               </mat-error>
             </mat-form-field>
           </div>
@@ -223,51 +210,51 @@
           <!-- Group Name -->
           <div>
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.GROUP_NAME' | transloco }}</mat-label>
+              <mat-label>Group Name</mat-label>
               <input 
                 matInput 
                 formControlName="groupName" 
-                [placeholder]="'SETTINGS.GROUP_NAME_PLACEHOLDER' | transloco"
+                placeholder="General"
               >
-              <mat-hint>{{ 'SETTINGS.GROUP_NAME_HINT' | transloco }}</mat-hint>
+              <mat-hint>Optional grouping for organization</mat-hint>
             </mat-form-field>
           </div>
           
           <!-- Description -->
           <div class="sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DESCRIPTION' | transloco }}</mat-label>
+              <mat-label>Description</mat-label>
               <textarea 
                 matInput 
                 formControlName="description" 
                 rows="2"
-                [placeholder]="'SETTINGS.DESCRIPTION_PLACEHOLDER' | transloco"
+                placeholder="Field description"
               ></textarea>
-              <mat-hint>{{ 'SETTINGS.DESCRIPTION_HINT' | transloco }}</mat-hint>
+              <mat-hint>Optional description for this field</mat-hint>
             </mat-form-field>
           </div>
           
           <!-- Required Checkbox -->
           <div class="sm:col-span-2">
             <mat-checkbox formControlName="isRequired">
-              {{ 'SETTINGS.FIELD_REQUIRED' | transloco }}
+              Field is required
             </mat-checkbox>
           </div>
           
           <!-- General Code Type (only for general-code type) -->
           <div *ngIf="fieldForm.get('fieldType')?.value === 'general-code'" class="sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.GENERAL_CODE_TYPE' | transloco }} <span class="text-red-500">*</span></mat-label>
+              <mat-label>General Code Type <span class="text-red-500">*</span></mat-label>
               <input 
                 matInput 
                 type="number"
                 formControlName="generalCodeType" 
                 required
-                [placeholder]="'SETTINGS.GENERAL_CODE_TYPE_PLACEHOLDER' | transloco"
+                placeholder="Enter code type number"
               >
-              <mat-hint>{{ 'SETTINGS.GENERAL_CODE_TYPE_HINT' | transloco }}</mat-hint>
+              <mat-hint>The general code type number to use</mat-hint>
               <mat-error *ngIf="fieldForm.get('generalCodeType')?.hasError('required')">
-                {{ 'VALIDATION.REQUIRED' | transloco }}
+                General code type is required
               </mat-error>
             </mat-form-field>
           </div>
@@ -275,17 +262,17 @@
           <!-- Options (only for select and multi-select types) -->
           <div *ngIf="fieldForm.get('fieldType')?.value === 'select' || fieldForm.get('fieldType')?.value === 'multi-select'" 
                class="sm:col-span-2">
-            <h3 class="text-lg font-medium mb-2">{{ 'SETTINGS.OPTIONS' | transloco }}</h3>
+            <h3 class="text-lg font-medium mb-2">Options</h3>
             
             <div formArrayName="options">
               <div *ngFor="let option of optionsFormArray.controls; let i = index" [formGroupName]="i" class="flex items-start space-x-2 mb-2">
                 <mat-form-field appearance="outline" class="flex-1">
-                  <mat-label>{{ 'SETTINGS.OPTION_TEXT' | transloco }}</mat-label>
+                  <mat-label>Option Text</mat-label>
                   <input matInput formControlName="displayText" required>
                 </mat-form-field>
                 
                 <mat-form-field appearance="outline" class="flex-1">
-                  <mat-label>{{ 'SETTINGS.OPTION_VALUE' | transloco }}</mat-label>
+                  <mat-label>Option Value</mat-label>
                   <input matInput formControlName="value" required>
                 </mat-form-field>
                 
@@ -296,7 +283,7 @@
               
               <button mat-stroked-button type="button" (click)="addOption()" class="w-full">
                 <mat-icon class="mr-1">add</mat-icon>
-                {{ 'SETTINGS.ADD_OPTION' | transloco }}
+                Add Option
               </button>
             </div>
           </div>
@@ -304,26 +291,26 @@
           <!-- Validation for text/textarea -->
           <div *ngIf="fieldForm.get('fieldType')?.value === 'text' || fieldForm.get('fieldType')?.value === 'textarea'" class="sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.MAX_LENGTH' | transloco }}</mat-label>
+              <mat-label>Max Length</mat-label>
               <input 
                 matInput 
                 type="number" 
                 formControlName="maxLength"
                 min="1"
               >
-              <mat-hint>{{ 'SETTINGS.MAX_LENGTH_HINT' | transloco }}</mat-hint>
+              <mat-hint>Maximum number of characters</mat-hint>
             </mat-form-field>
           </div>
           
           <!-- Validation for number -->
           <div *ngIf="fieldForm.get('fieldType')?.value === 'number'" class="grid grid-cols-2 gap-4 sm:col-span-2">
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.MIN_VALUE' | transloco }}</mat-label>
+              <mat-label>Min Value</mat-label>
               <input matInput type="number" formControlName="minValue">
             </mat-form-field>
             
             <mat-form-field appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.MAX_VALUE' | transloco }}</mat-label>
+              <mat-label>Max Value</mat-label>
               <input matInput type="number" formControlName="maxValue">
             </mat-form-field>
           </div>
@@ -333,7 +320,7 @@
             <!-- Text default value -->
             <mat-form-field *ngIf="fieldForm.get('fieldType')?.value === 'text' || fieldForm.get('fieldType')?.value === 'textarea'" 
                            appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DEFAULT_VALUE' | transloco }}</mat-label>
+              <mat-label>Default Value</mat-label>
               <input matInput formControlName="defaultValue">
             </mat-form-field>
             
@@ -341,14 +328,14 @@
             <mat-form-field *ngIf="fieldForm.get('fieldType')?.value === 'number' || 
                                  fieldForm.get('fieldType')?.value === 'general-code'" 
                            appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DEFAULT_VALUE' | transloco }}</mat-label>
+              <mat-label>Default Value</mat-label>
               <input matInput type="number" formControlName="defaultValue">
             </mat-form-field>
             
             <!-- Date default value -->
             <mat-form-field *ngIf="fieldForm.get('fieldType')?.value === 'date'" 
                            appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DEFAULT_VALUE' | transloco }}</mat-label>
+              <mat-label>Default Value</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="defaultValue">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -357,17 +344,17 @@
             <!-- Boolean default value -->
             <div *ngIf="fieldForm.get('fieldType')?.value === 'boolean'" class="mb-4">
               <mat-checkbox formControlName="defaultValue">
-                {{ 'SETTINGS.DEFAULT_CHECKED' | transloco }}
+                Default Checked
               </mat-checkbox>
             </div>
             
             <!-- Select default value -->
             <mat-form-field *ngIf="fieldForm.get('fieldType')?.value === 'select'" 
                            appearance="outline" class="w-full">
-              <mat-label>{{ 'SETTINGS.DEFAULT_OPTION' | transloco }}</mat-label>
+              <mat-label>Default Option</mat-label>
               <mat-select formControlName="defaultValue">
-                <mat-option [value]="null">{{ 'COMMON.NONE' | transloco }}</mat-option>
-                <mat-option *ngFor="let option of optionsFormArray.controls" [value]="option.get('id')?.value || option.get('value')?.value">
+                <mat-option [value]="null">None</mat-option>
+                <mat-option *ngFor="let option of optionsFormArray.controls" [value]="option.get('value')?.value">
                   {{ option.get('displayText')?.value }}
                 </mat-option>
               </mat-select>
@@ -377,9 +364,9 @@
       </mat-dialog-content>
       
       <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>{{ 'BUTTONS.CANCEL' | transloco }}</button>
+        <button mat-button mat-dialog-close>Cancel</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="fieldForm.invalid">
-          {{ isEditMode ? ('BUTTONS.SAVE' | transloco) : ('BUTTONS.ADD' | transloco) }}
+          {{ isEditMode ? 'Save' : 'Add' }}
         </button>
       </mat-dialog-actions>
     </form>
@@ -387,15 +374,15 @@
   
   <!-- Confirmation Dialog Template -->
   <ng-template #confirmDialog>
-    <h2 mat-dialog-title>{{ 'SETTINGS.CONFIRM_DELETE_TITLE' | transloco }}</h2>
+    <h2 mat-dialog-title>Confirm Delete</h2>
     <mat-dialog-content>
-      <p>{{ 'SETTINGS.CONFIRM_DELETE_MESSAGE' | transloco }}</p>
-      <p class="text-red-600 mt-2">{{ 'SETTINGS.CONFIRM_DELETE_WARNING' | transloco }}</p>
+      <p>Are you sure you want to delete this custom field?</p>
+      <p class="text-red-600 mt-2">This action cannot be undone and will remove all associated data.</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>{{ 'BUTTONS.CANCEL' | transloco }}</button>
+      <button mat-button mat-dialog-close>Cancel</button>
       <button mat-raised-button color="warn" [mat-dialog-close]="true">
-        {{ 'BUTTONS.DELETE' | transloco }}
+        Delete
       </button>
     </mat-dialog-actions>
   </ng-template>
