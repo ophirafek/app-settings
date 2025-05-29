@@ -74,6 +74,7 @@
               "buildTarget": "app-settings:build:production"
             },
             "development": {
+              "port": 58219,
               "buildTarget": "app-settings:build:development"
             }
           },
