@@ -17,8 +17,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CustomFieldService } from '../../services/custom-field.service';
+import { CustomFieldService } from 'custom-field-lib';
 import { finalize } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-custom-fields-admin',
@@ -83,6 +84,7 @@ export class CustomFieldsAdminComponent implements OnInit {
   ) {
     // Initialize form
     this.fieldForm = this.createFieldForm();
+    customFieldService.apiUrl = `${environment.apiUrl}/api/customfields`
   }
 
   ngOnInit(): void {

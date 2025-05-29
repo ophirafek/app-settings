@@ -22,6 +22,7 @@
     "@angular/router": "^18.2.0",
     "@jsverse/transloco": "^7.6.1",
     "autoprefixer": "^10.4.21",
+    "custom-field-lib": "file:public/custom-field-lib-0.0.1.tgz",
     "glob": "^11.0.2",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
